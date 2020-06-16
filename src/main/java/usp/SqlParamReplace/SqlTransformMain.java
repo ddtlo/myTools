@@ -1,10 +1,13 @@
-package usp;
+package usp.SqlParamReplace;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-public class SqlTransform {
+/**
+ * 批量替换sql中的参数,txt1是sql,txt2是参数
+ */
+public class SqlTransformMain {
 
     private static final String fileSql = "/home/chl/txt1";
     private static final String fileParam = "/home/chl/txt2";
@@ -53,29 +56,54 @@ public class SqlTransform {
             }
         }
 
-        //参数数组
+//        //参数数组
         String s2 = new String(sb2); //StringBuffer ==> String
-        System.out.println("txt2内容为==> " + s2);
-        String[] as2 = s2.split("], \\[");
-
-        //依次替换数组中的占位字段,从达到小替换
-        for(int i = as2.length ;i>0;i--){
-            if(as2[i-1]==null||as2[i-1].length()==0){
-                throw new RuntimeException("参数为空");
-            }
-            //去除参数中的key,括号,并将双引号改为单引号
-            String param = as2[i-1].substring(as2[i-1].indexOf(",")+1);
-            param=param.replace("\"","'");
-            param=param.replace("]","");
-            if(!s.contains("$"+i)){
-                throw new RuntimeException("没有找到第"+i+"个占位符");
-            }
-            s = s.replace("$"+i,param);
-        }
+//        System.out.println("txt2内容为==> " + s2);
+//        String[] as2 = s2.split("], \\[");
+//
+//        //依次替换数组中的占位字段,从大到小替换
+//        for(int i = as2.length ;i>0;i--){
+//            if(as2[i-1]==null||as2[i-1].length()==0){
+//                throw new RuntimeException("参数为空");
+//            }
+//            //去除参数中的key,括号,并将双引号改为单引号
+//            String param = as2[i-1].substring(as2[i-1].indexOf(",")+1);
+//            param=param.replace("\"","'");
+//            param=param.replace("]","");
+//            if(!s.contains("$"+i)){
+//                throw new RuntimeException("没有找到第"+i+"个占位符");
+//            }
+//            s = s.replace("$"+i,param);
+//        }
+        s = replace(s,s2);
         if(s.contains("$")){
             throw new RuntimeException("sql中仍有未替换的占位符$");
         }
         System.out.println("最终sql:"+s);
+    }
+
+    public static String replace(String sql ,String paramS){
+        //参数数组
+        String[] params = paramS.split("], \\[");
+
+        //依次替换数组中的占位字段,从大到小替换
+        for(int i = params.length ;i>0;i--){
+            if(params[i-1]==null||params[i-1].length()==0){
+                throw new RuntimeException("参数为空");
+            }
+            //去除参数中的key,括号,并将双引号改为单引号
+            String param = params[i-1].substring(params[i-1].indexOf(",")+1);
+            param=param.replace("\"","'");
+            param=param.replace("]","");
+            if(!sql.contains("$"+i)){
+                throw new RuntimeException("没有找到第"+i+"个占位符");
+            }
+            sql = sql.replace("$"+i,param);
+        }
+        if(sql.contains("$")){
+            throw new RuntimeException("sql中仍有未替换的占位符$");
+        }
+        return sql;
     }
 
 }
