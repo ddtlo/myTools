@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * 8.找到连接符后重复4到7步,如果找到中止标志(where,select)
  */
 public class SqlTableReleation {
-    private static final String fileSql = "/home/chl/txt1";
+    private static final String fileSql = "D://1.txt";
     public static void main(String[] args) {
 
         //读取sql文件

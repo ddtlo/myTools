@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
  */
 public class SqlTransformMain {
 
-    private static final String fileSql = "/home/chl/txt1";
-    private static final String fileParam = "/home/chl/txt2";
+    private static final String fileSql = "D://1.txt";
+    private static final String fileParam = "D://2.txt";
 
     public static void main(String[] args) {
 
